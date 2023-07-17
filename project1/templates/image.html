@@ -1,0 +1,401 @@
+{% extends 'common.html' %}
+{% block body %}
+
+<style>
+  .loading-spinner {
+      display: none;
+    }
+</style>
+
+<script>
+     window.onload = function() {
+  
+
+      var alertMessage = "{{ al_m}}";
+      if (alertMessage) {
+        var alertDiv = document.createElement("div");
+        alertDiv.classList.add("alert");
+        alertDiv.innerHTML = alertMessage;
+        document.body.insertBefore(alertDiv, document.body.firstChild);
+      }
+    };
+  </script>
+  <div class="conatiner mb-5 mt-3">
+  <div class="container-fluid">
+   
+  <div class="row mt-3">
+    <div class="col-md-6">
+      <div class="container">
+        <div id="map" class="img-css"></div>
+   
+      
+      
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      console.log("script entered : "); 
+          var x=[],y=[];
+         
+          
+            var map = L.map('map').setView([15.733048,80.9455512], 9);
+           
+           L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 17,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map);
+  var colors = [
+  // Shining White
+  'rgba(255, 215, 0, 0.78)',     // Shining Gold
+  'rgba(0, 255, 0, 0.78)',       // Shining Lime
+  'rgba(255, 105, 180, 0.8)',// Shining Deep Sky Blue
+  'rgba(255, 0, 255, 0.78)',     // Shining Fuchsia
+  'rgba(255, 165, 0, 0.78)',     // Shining Orange
+  'rgba(128, 0, 128, 0.78)',     // Shining Indigo
+  'rgba(255, 0, 0, 0.78)',       // Shining Red
+  'rgba(0, 128, 128, 0.78)',     // Shining Teal
+  'rgba(255, 192, 203, 0.78)' ,
+  'rgba(0, 191, 255, 0.78)',      // Shining Pink
+];
+
+    var colorIndex = 0;
+
+// Function to get the next color from the array
+function getNextColor() {
+  var color = colors[colorIndex];
+  colorIndex = (colorIndex + 1);
+  if(colorIndex>9)
+  {
+    colorIndex=0;
+  }
+  return color;
+} var colorIndex = 0;
+
+// // Function to get the next color from the array
+// function getNextColor() {
+//   var color = colors[colorIndex];
+//   colorIndex = (colorIndex + 1);
+//   if(colorIndex>9)
+//   {
+//     colorIndex=0;
+//   }
+//   return color;
+// }
+            
+     map.pm.addControls({
+    position: 'topleft',
+    drawCircle: false,
+    drawMarker: false,
+    drawCircleMarker:false,
+    drawPolyline:false,
+    drawPolygon:false,
+    cutPolygon:false,
+    editMode:false,
+    dragMode:false
+    
+  });
+
+  var x=[];
+  var y=[];
+  var x1=[];
+  var y1=[];
+  var layercount=0;
+  var layerMap={};
+  
+  function makePopupContent(feature){
+  
+    x=feature.geometry.coordinates[0][0];
+    y=feature.geometry.coordinates[0][2];
+    x1.push(x);
+    y1.push(y);
+    console.log("coordinates entered ");
+  
+   document.getElementById("disabledTextInput").value=x;
+   document.getElementById("disabledText").value=y;
+  
+    return `
+      ${feature.geometry.coordinates}   
+    `;
+  }
+  function setPupup(layer) {
+    console.log("entered into the setpupup ");
+    var fillColor = getNextColor();
+
+// Set the area styles with the random color
+layer.setStyle({
+  className: 'area',
+  fillColor: fillColor,
+  color: fillColor
+});
+    var feature = layer.toGeoJSON();
+     makePopupContent(feature);
+  
+  }
+  
+  map.on('pm:create', function(e) {
+    var layer = e.layer;
+    layercount++;
+    setPupup(layer);
+    layer.on('pm:update', function(e) {
+      console.log("entered pm creation ");
+      setPupup(e.layer);
+    });
+    
+  
+  
+  });
+  // ...
+
+// Function to handle layer removal
+function handleLayerRemoval(layerx) {
+  
+  // Remove the layer from the map
+  map.removeLayer(layerx);
+}
+
+// Add event listener for layer removal
+map.on('pm:remove', function(e) {
+  var layer1= e.layer;
+  var t= layer1.toGeoJSON().geometry.coordinates[0][0];
+  var t1=layer1.toGeoJSON().geometry.coordinates[0][2];
+  console.log("what the hell is going on man ",t);
+  console.log(t);
+
+var t = x1.findIndex(function(element) {
+  return element.indexOf(t[0]) !== -1 && element.indexOf(t[1]) !== -1;
+});
+var t1 = y1.findIndex(function(element) {
+  return element.indexOf(t1[0]) !== -1 && element.indexOf(t1[1]) !== -1;
+});
+console.log(t); // Output: 1
+x1.pop(t);
+y1.pop(t1);
+  handleLayerRemoval(layer1);
+});
+
+// ...
+
+
+
+
+
+  
+  
+  var t_a;
+
+  $(document).ready(function() {
+    $('#myForm').submit(function(event) {
+      event.preventDefault(); 
+      var loadingSpinner = document.querySelector('.loading-spinner');
+        loadingSpinner.style.display = 'block';
+         $.ajax({
+        url: '/form',
+        type: 'POST',
+        data: {
+          'start-date': $('#start-date').val(),
+          'end-date': $("#end-date").val(),
+          'option':$('#option').val(),
+          'x':JSON.stringify(x1),
+          'y':JSON.stringify(y1)
+        },
+        success: function(response) {
+          loadingSpinner.style.display='none';
+          console.log(response.message=="null");
+          console.log(response.ml_a==null);
+          var he=response.message=="null";
+          if(response.ml_a.length==0){
+            
+            alert("please select an area in the map");
+          }
+
+          else if(he){
+              loadingSpinner.style.display = 'none';
+         
+         var base64Array=response.pl_a;
+         var container = document.getElementById("imageContainer");
+         var container1= document.getElementById("imageContainer1");
+         var container3=document.getElementById('last_two');
+ 
+ 
+         container.innerHTML = "";
+         container1.innerHTML = "";
+         container3.innerHTML="";
+         var base64Array1=response.ml_a;
+         var imageContainer = document.getElementById("imageContainer");
+         imageContainer.style.display = "none";
+         var imageContainer1 = document.getElementById("imageContainer1");
+         imageContainer1.style.display = "none";
+         var last_two= document.getElementById("last_two");
+         last_two.style.display = "none";
+       
+         var ido=document.getElementById('option').value;
+         if( ido=='ML PREDICTION' || ido=='FOREST AREA'){
+          console.log("for ml and area");
+           for(var i=0;i<base64Array1.length;i++){
+            console.log(i);
+           var decs=atob(base64Array[i]);
+           var img=document.createElement('img');
+           img.src='data:image/png;base64,'+base64Array1[i];
+           img.id='last_i';
+           // var container=document.getElementById("imageContainer");
+           container3.appendChild(img);
+           var last_two= document.getElementById("last_two");
+           last_two.style.display = "block";
+           
+ 
+ 
+             }
+ 
+           }
+          //  else if(idd=="FOREST AREA"){
+
+          //  }
+         else{
+           console.log("-------- ",base64Array.length)
+           for(var i=0;i<base64Array.length;i++){
+             console.log("i value : ",i);
+           var decs=atob(base64Array[i]);
+                          //           var legendContainer = document.createElement('div');
+                          // legendContainer.className = 'legend-container';
+                          // var label = document.createElement('p');
+                          //   label.textContent = colors[i];
+                          //   legendContainer.appendChild(label);
+                          //   container.appendChild(legendContainer);
+            
+           var img=document.createElement('img');
+           img.src='data:image/png;base64,'+base64Array[i];
+           img.id='first_i'
+           // var container=document.getElementById("imageContainer");
+           container.appendChild(img);
+           var img1=document.createElement('img');
+           img1.src='data:image/png;base64,'+base64Array1[i];
+           img1.id='second_i';
+           // var container=document.getElementById("imageContainer");
+           container1.appendChild(img1);
+ 
+               console.log("added child you know ");
+ 
+         
+         var imageContainer = document.getElementById("imageContainer");
+         imageContainer.style.display = "block";
+         var imageContainer1 = document.getElementById("imageContainer1");
+         imageContainer1.style.display = "block";}
+         }
+  
+         t_a=response.totala;
+         
+         }
+      // else{
+      //   $(#messagecontainer).text(response.message);
+
+      // }
+      else{
+        // console.log("if not fnull else part so error happenning ");
+        loadingSpinner.style.display = 'none';
+        // document.getElementById('messagecontainer').innerHTML="no dataset found ";
+        alert("The error can be :\n1. The range of coordinates are not applicable\n2. No data found in the range of dates\nUse high range date\ndonot go beyond the range of map\n");
+      }
+
+
+
+
+
+        },
+        error:function(error){
+            console.log("erroor in ajax: ",error);
+        }
+
+      });
+    });
+  });
+
+
+
+
+
+  var ba=''
+  function writein(){
+    console.log(t_a);
+    t_a=t_a.toString()
+    ba+='total area : '+String(t_a);
+    console.log(ba);
+    document.getElementById('info').innerHTML=ba;
+  
+  }
+  
+  
+  </script>
+  <div class="col-md-6">
+    <div class="container">
+      <form id="myForm" action="/form" method="POST" class="form-container">
+        <div class="form-group heading">
+          <label for="start-date" class="heading">Start Date:</label>
+          <input type="date" class="form-control mt-2" id="start-date" name="start-date" value="2022-01-01" >
+        </div>
+        <div class="form-group heading">
+          <label for="end-date" class="heading">End Date:</label>
+          <input type="date" class="form-control mt-2" id="end-date" name="end-date"  value="2024-01-01" >
+        </div>
+        <div class="form-group heading">
+          <label for="dropdown" class="heading">ANALYSIS:</label>
+          <select class="form-control mt-3" id="option" name="option" required>
+            <option value="">--Select--</option>
+            <option>NDVI</option>
+            <option>NDWI</option>
+            <option>FOREST AREA</option>
+            <option>ML PREDICTION</option>
+          </select>
+        </div>
+        <h4 class="mt-2">INPUTS ARE GIVEN FROM SELECTION OF MAP AREA</h4>
+        <div class="form-group mt-3 heading">
+          <label for="disabledText " class="heading">lon and lat of first point</label>
+          <input type="text" id="disabledTextInput" name="disabledTextInput" class="form-control mt-3" placeholder="disabled Input" >
+        </div>
+        <div class="form-group heading">
+          <label for="disabledText heading " class="heading">lon and lat of third point</label>
+          <input type="text" id="disabledText" name="disabledText" class="form-control mt-3" placeholder="disabled Input" >
+        </div>
+        <button type="submit" class="btn btn-primary submit-button mt-5 mb-5">SUBMIT</button>
+      </form>
+    </div>
+  </div>
+</div>   
+        <!-- <div class="btn btn-primary" onclick="writein()">analysis</div> -->
+        <div class="d-flex justify-content-center align-items-center mt-4">
+          <div class="loading-spinner">
+            <div class="spinner-border text-success" role="status">
+              <span class="visually-hidden">Loading.....</span>
+            </div>
+          </div>
+        </div>
+    
+    
+    
+
+
+  <div style="text-align: center;">
+  <p id="info">
+    
+  </p></div>
+<!-- <div class="container " >
+  <p id="messagecontainer"></p>
+  
+</div> -->
+  <div class="row">
+  <div class="col-md-6">
+  <div class="container everyting" id="imageContainer">
+
+  </div>
+</div>
+<div class="col-md-6">
+  <div class="container everyting "  id="imageContainer1">
+
+  </div>
+</div>
+  </div>
+  <div class="container everyting " id="last_two">
+
+  </div>
+</div> 
+  </div>
+  {% endblock body %}  

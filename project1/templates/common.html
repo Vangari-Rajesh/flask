@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forest Analysis</title>
+ 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+   integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" 
+   integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet-src.js"></script>
+<script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.css" />
+<!--------------------------------------------------------------------------- -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.css" />
+<script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet-src.js"></script>
+<script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script rel="javascript" type="text/javascript" href="js/jquery-1.11.3.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.css" />
+<!--------------------------------------------------------------------------- -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.css" />
+<script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js"></script>
+
+
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+crossorigin=""></script>
+<script src="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+crossorigin=""></script>
+<script src="https://unpkg.com/leaflet.pm@latest/dist/leaflet.pm.min.js"></script>
+
+
+
+
+
+
+  <style  >
+
+
+
+
+
+
+  #map{height:700px;
+    
+    
+  }
+  .img-css {
+  height: 700px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+.form-container {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  margin-top: 50px;
+  
+  padding: 20px;
+}
+.everyting{
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  margin-top: 20px;
+
+
+}
+
+.submit-button {
+  display: block;
+  margin: 0 auto;
+}
+
+
+@media (min-width: 992px) {
+  .img-css {
+    margin-top: 20px;
+    padding: 10px;
+  }
+}
+
+  /* .row{
+    width: 100%;
+    margin: 15% 15% 15% 10%;
+  } */
+  /* .col-md-6{
+    width: 40%;
+    padding:10px;
+  } */
+  #imageContainer {
+  height: 550px; /* Set the desired constant height */
+  overflow-y:auto;
+  
+  overflow-x:auto;
+  display: none;
+  
+/* Enable vertical scrolling */
+}
+.custom-navbar {
+  border-bottom: 2px solid #ccc;
+}
+
+.custom-navbar .navbar-brand {
+  font-weight: bold;
+}
+.heading{
+  font-weight: bold;
+}
+
+.custom-navbar .navbar-nav .nav-link {
+  color: #333;
+  transition: color 0.3s;
+}
+
+.custom-navbar .navbar-nav .nav-link:hover {
+  color: #666;
+}
+
+@media (max-width: 991.98px) {
+  .custom-navbar .navbar-nav {
+    background-color: #f8f9fa;
+    padding-top: 10px;
+    border-radius: 5px;
+  }
+  
+  .custom-navbar .navbar-nav .nav-item {
+    margin-bottom: 10px;
+  }
+}
+
+
+#imageContainer1 {
+  height: 550px; /* Set the desired constant height */
+  overflow-y: auto;
+  overflow-x: auto;
+  scrollbar-width: 12px; 
+  display: none;
+  /* Enable vertical scrolling */
+}
+#last_two{
+  height: 600px;
+  overflow-y: auto;
+  overflow-x: auto;
+
+  max-width:max-content;
+  display: none;
+}
+#first_i,#second_i{
+  min-height: 425px;
+}
+.hover1:hover{
+ 
+  color:rgb(17, 209, 216);
+
+}
+.hover2:hover{
+  color:#0d36ee;
+}
+/* .navbar {
+  height: 80px; 
+}
+
+.navbar-brand {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav {
+  height: 100%;
+  align-items: center;
+}
+
+.nav-link {
+  padding: 1rem;
+}
+ */
+
+/* #first_i{ */
+  /* height: 500px;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  
+}
+#second_i{
+  height: 500px;
+  max-width: 100%;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+} */
+
+  </style>
+
+
+
+
+
+
+
+
+
+
+</head>
+</head>
+<body>
+ <!-- ---------------------------------- --> 
+
+
+  
+
+ <nav class="navbar navbar-expand-lg navbar-light bg-light custom-navbar">
+  <div class="container-fluid">
+    <a class="navbar-brand fs-2 hover1" href="/">FOREST ANALYSIS</a>
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="navbar-nav ms-auto hover2">
+        <li class="nav-item">
+          <a class="nav-link fs-3 hover2" href="/">REFRESH</a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link fs-3 hover2" href="/about">About us</a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link fs-3 hover2" href="/contact">Contact us</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+</body>
+{% block body %}
+
+ {% endblock body %}
+
+</html>
